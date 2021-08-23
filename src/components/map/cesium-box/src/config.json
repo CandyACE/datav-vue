@@ -1,0 +1,95 @@
+[
+    {
+      "key": "viewerOptions",
+      "config": {
+        "type": "object",
+        "component": "none",
+        "alias": "三维球设置",
+        "tip": "",
+        "displayMode": "nest",
+        "features": [],
+        "layout": "horizontal",
+        "toggleCol": "",
+        "isHide": false,
+        "defaultValue": null,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "InfiniteMin": false,
+        "InfiniteMax": false,
+        "suffix": "",
+        "enums": [],
+        "whichEnum": {
+          "field": "",
+          "value": ""
+        },
+        "flatValue": false
+      },
+      "path": "viewerOptions",
+      "virtualPath": "",
+      "children": [
+        {
+          "key": "transparent",
+          "config": {
+            "type": "boolean",
+            "component": "switch",
+            "alias": "背景透明",
+            "tip": "",
+            "displayMode": "single",
+            "features": [],
+            "layout": "horizontal",
+            "toggleCol": "",
+            "isHide": false,
+            "defaultValue": false,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "InfiniteMin": false,
+            "InfiniteMax": false,
+            "suffix": "",
+            "enums": [],
+            "whichEnum": {
+              "field": "",
+              "value": ""
+            },
+            "flatValue": false
+          },
+          "path": "viewerOptions.transparent",
+          "virtualPath": ""
+        },
+        {
+          "key": "tiandituKey",
+          "config": {
+            "type": "string",
+            "component": "input",
+            "alias": "天地图Key",
+            "tip": "",
+            "displayMode": "single",
+            "features": [],
+            "layout": "horizontal",
+            "toggleCol": "",
+            "isHide": false,
+            "defaultValue": "0706de30ab31624f9268b07fbc09bfd4",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "InfiniteMin": false,
+            "InfiniteMax": false,
+            "suffix": "",
+            "enums": [],
+            "whichEnum": {
+              "field": "",
+              "value": ""
+            },
+            "flatValue": false
+          },
+          "path": "viewerOptions.tiandituKey",
+          "virtualPath": ""
+        }
+      ],
+      "cols": [
+        "transparent",
+        "tiandituKey"
+      ]
+    }
+  ]

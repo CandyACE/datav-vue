@@ -3,6 +3,9 @@ node_modules
 /dist
 /website
 
+# LSGlobe files
+public/LSGlobe
+src/components/map/ls-globe-earth
 
 # local env files
 .env.local

@@ -20,7 +20,7 @@ export default (adapter: MockAdapter) => {
       code: 0,
       message: 'ok',
       data: {
-        name: '美人骨',
+        name: 'tuxin',
         avatar: '//files.pengxiaotian.com/avatar.jpeg',
         role: 1,
       },

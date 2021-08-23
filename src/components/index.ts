@@ -18,6 +18,10 @@ import VFullScreen from './button/full-screen'
 
 import VWordCloud from './chart/word-cloud'
 
+// map
+import VCesium from './map/cesium-box'
+// import LsGlobeEarth from './map/ls-globe-earth'
+
 const components = [
   VMainTitle,
   VNumberTitleFlop,
@@ -32,6 +36,8 @@ const components = [
   VFullScreen,
   VMainImg,
   VWordCloud,
+  VCesium,
+  // LsGlobeEarth
 ]
 
 const install = (app: App): void => {

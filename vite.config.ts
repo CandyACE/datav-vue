@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 
 import plainText from 'vite-plugin-plain-text'
 import styleImport from 'vite-plugin-style-import'
+import cesium from 'vite-plugin-cesium'
 
 import { resolve } from 'path'
 
@@ -22,6 +23,7 @@ export default ({ mode }: ConfigEnv) => {
   return defineConfig({
     base: env.VITE_PUBLIC_PATH,
     plugins: [
+      cesium(),
       vue(),
       plainText(/\.hbs$/),
       styleImport({
