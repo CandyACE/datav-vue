@@ -10,7 +10,10 @@
       <img class="datav-logo" :src="`${cdn}/datav/datav-loading.gif`">
     </a>
   </div>
-  <div class="datav-layout" :style="{ visibility: loading ? 'hidden' : 'visible' }">
+  <div
+    class="datav-layout"
+    :style="{ visibility: loading ? 'hidden' : 'visible' }"
+  >
     <a
       v-if="pageConfig.useWatermark"
       href="/"
@@ -29,7 +32,15 @@
           width: com.attr.w + 'px',
           height: com.attr.h + 'px',
           opacity: com.attr.opacity,
-          transform: `rotate(${com.attr.deg}deg) ${com.attr.filpH ? 'scaleX(-1)' : ''} ${com.attr.filpV ? 'scaleY(-1)' : ''}`,
+          transform: `rotate(${com.attr.deg}deg) ${
+            com.attr.filpH ? 'scaleX(-1)' : ''
+          } ${com.attr.filpV ? 'scaleY(-1)' : ''} ${
+            com.attr.useTransform
+              ? `rotateX(${com.attr.transformX || 0}deg) rotateY(${
+                com.attr.transformY || 0
+              }deg) rotateZ(${com.attr.transformZ || 0}deg)`
+              : ''
+          }`,
           filter: styleFilter,
         }"
         class="-datav-com absolute"
@@ -103,7 +114,7 @@ export default defineComponent({
       setStyle(document.body, {
         transform: `scale(${ratio})`,
         transformOrigin: 'left top',
-        backgroundSize: `${(width / cw * ratio) * 100}% 100%`,
+        backgroundSize: `${(width / cw) * ratio * 100}% 100%`,
         backgroundPosition: `${gap.toFixed(3)}px top`,
         marginLeft: `${gap.toFixed(3)}px`,
       } as CSSStyleDeclaration)
@@ -117,7 +128,7 @@ export default defineComponent({
       setStyle(document.body, {
         transform: `scale(${ratio})`,
         transformOrigin: 'left top',
-        backgroundSize: `${(width / cw * ratio) * 100}% 100%`,
+        backgroundSize: `${(width / cw) * ratio * 100}% 100%`,
         backgroundPosition: `${gap.toFixed(3)}px top`,
         // marginLeft: `${gap.toFixed(3)}px`,
       } as CSSStyleDeclaration)
@@ -154,7 +165,8 @@ export default defineComponent({
 
     const initPageInfo = (config: PageConfig) => {
       document.title = EditorModule.screen.name
-      document.querySelector('meta[name="viewport"]')
+      document
+        .querySelector('meta[name="viewport"]')
         .setAttribute('content', `width=${config.width}`)
 
       setStyle(document.documentElement, {
