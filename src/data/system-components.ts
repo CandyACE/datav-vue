@@ -160,6 +160,15 @@ export const map = {
       img: `${import.meta.env.VITE_APP_CDN}/com/3d-world-332-144.png`,
       thum: `${import.meta.env.VITE_APP_CDN}/com-thum/3d-world-368-208.png`,
       used: true,
+      children: [
+        {
+          name: 'VCesiumBox',
+          alias: 'Cesium世界地图',
+          img: `${import.meta.env.VITE_APP_CDN}/com/3d-world-332-144.png`,
+          thum: `${import.meta.env.VITE_APP_CDN}/com-thum/3d-world-368-208.png`,
+          used: true,
+        },
+      ],
     },
     // {
     //   name: 'VLsGlobeEarth',

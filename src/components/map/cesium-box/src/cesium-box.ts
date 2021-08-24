@@ -42,10 +42,25 @@ export class CesiumBox extends DatavComponent {
 
     this.apiData = initApiData(this.id)
 
-    this.events = {
+    const cameraMoveEndFields = [
+      createField('position', { description: '相机的位置', optional: true }),
+      createField('direction ', { description: '相机的朝向', optional: true }),
+      createField('up ', { description: '相机的俯仰', optional: true }),
+    ]
 
+    this.events = {
+      CameraMoveEnd: {
+        description: '相机移动结束事件',
+        fields: Object.assign({}, ...cameraMoveEndFields),
+      },
     }
-    this.actions = {}
+
+    this.actions = {
+      setCamera: {
+        description: '设置相机视角',
+        fields: Object.assign({}, ...cameraMoveEndFields),
+      },
+    }
 
     return this
   }
@@ -54,7 +69,7 @@ export class CesiumBox extends DatavComponent {
     try {
       // 组件静态数据来源，当前项目统一管理目录：public/data/*
       // 如：public/data/demo/data.json 简写为 => demo/data
-      const path = 'map/cesium-box'
+      const path = ''
       const res = await getStaticData(this.id, path)
       this.apiData.source.config.data = JSON.stringify(res.data)
     } catch (error) {

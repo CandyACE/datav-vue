@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="datav-transform"
-    :class="transformClass"
-    :style="transformStyle"
-  >
+  <div class="datav-transform" :class="transformClass" :style="transformStyle">
     <refer-line
       v-if="referLine.enable && com.selected"
       :attr="com.attr"
@@ -30,7 +26,11 @@
           ></div>
         </div>
         <template v-for="(v, k) in points" :key="k">
-          <i v-if="v.rotateStyle" :class="`${v.name}-handler`" data-html2canvas-ignore>
+          <i
+            v-if="v.rotateStyle"
+            :class="`${v.name}-handler`"
+            data-html2canvas-ignore
+          >
             <span
               class="rotate-handler"
               :style="v.rotateStyle"
@@ -63,8 +63,11 @@ import type { CSSProperties } from 'vue'
 import { DatavComponent } from '@/components/datav-component'
 import { EditorModule } from '@/store/modules/editor'
 import {
-  Direction, getCursors,
-  handleMove, handleZoom, handleRotate,
+  Direction,
+  getCursors,
+  handleMove,
+  handleZoom,
+  handleRotate,
 } from './index'
 import { useContextMenu } from '../../editor-context-menu/index'
 import ReferLine from './refer-line.vue'
@@ -109,7 +112,11 @@ export default defineComponent({
 
     const handlerStyle = computed(() => ({
       cursor: 'move',
-      transform: `rotate(${props.com.attr.deg}deg)`,
+      transform: `rotate(${props.com.attr.deg}deg) ${
+        props.com.attr.useTransform
+          ? `rotateX(${props.com.attr.transformX || 0}deg) rotateY(${props.com.attr.transformY || 0}deg) rotateZ(${props.com.attr.transformZ || 0}deg)`
+          : ''
+      }`,
     }))
 
     const comStyle = computed(() => {
@@ -121,7 +128,9 @@ export default defineComponent({
       }
       return {
         display: hided ? 'none' : 'block',
-        transform: `scaleX(${attr.filpH ? -1 : 1}) scaleY(${attr.filpV ? -1 : 1}) rotateZ(360deg)`,
+        transform: `scaleX(${attr.filpH ? -1 : 1}) scaleY(${
+          attr.filpV ? -1 : 1
+        }) `,
         filter,
       }
     })
@@ -133,13 +142,15 @@ export default defineComponent({
 
     const cursor = computed(() => getCursors(props.com.attr.deg))
 
-    const points = computed<{
-      [k in Direction]: {
-        name: string
-        style: Partial<CSSProperties>
-        rotateStyle?: Partial<CSSProperties>
+    const points = computed<
+      {
+        [k in Direction]: {
+          name: string
+          style: Partial<CSSProperties>
+          rotateStyle?: Partial<CSSProperties>
+        };
       }
-    }>(() => {
+    >(() => {
       const transform = `scale(${1 / scale.value}, ${1 / scale.value})`
       return {
         t: {
@@ -149,7 +160,7 @@ export default defineComponent({
         rt: {
           name: 'top-right',
           style: { cursor: cursor.value.rt },
-          rotateStyle: { 'transform-origin': '25% 75%',  transform },
+          rotateStyle: { 'transform-origin': '25% 75%', transform },
         },
         r: {
           name: 'right',
@@ -158,7 +169,7 @@ export default defineComponent({
         rb: {
           name: 'bottom-right',
           style: { cursor: cursor.value.rb },
-          rotateStyle: { 'transform-origin': '25% 25%',  transform },
+          rotateStyle: { 'transform-origin': '25% 25%', transform },
         },
         b: {
           name: 'bottom',
@@ -167,7 +178,7 @@ export default defineComponent({
         lb: {
           name: 'bottom-left',
           style: { cursor: cursor.value.lb },
-          rotateStyle: { 'transform-origin': '75% 25%',  transform },
+          rotateStyle: { 'transform-origin': '75% 25%', transform },
         },
         l: {
           name: 'left',
@@ -176,7 +187,7 @@ export default defineComponent({
         lt: {
           name: 'top-left',
           style: { cursor: cursor.value.lt },
-          rotateStyle: { 'transform-origin': '75% 75%',  transform },
+          rotateStyle: { 'transform-origin': '75% 75%', transform },
         },
       }
     })
@@ -200,7 +211,6 @@ export default defineComponent({
     const onMove = (ev: MouseEvent) => {
       selectCom()
       handleMove(ev, props.com, scale.value, EditorModule.pageConfig.grid)
-
     }
 
     const onZoom = (ev: MouseEvent, dir: Direction) => {
@@ -237,6 +247,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import './style';
-
+@import "./style";
 </style>

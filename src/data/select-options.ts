@@ -181,3 +181,9 @@ export const imageTypes = [
   { id: 'bitmap', value: '位图' },
   { id: 'vector', value: '矢量图' },
 ]
+
+export const transformTypes = [
+  { id: 'x', value: 'X轴' },
+  { id: 'y', value: 'Y轴' },
+  { id: 'z', value: 'Z轴' },
+]

@@ -18,6 +18,10 @@ export interface ComponentAttr {
   opacity: number
   filpV: boolean
   filpH: boolean
+  useTransform: boolean
+  transformX: number
+  transformY: number
+  transformZ: number
 }
 
 export abstract class DatavComponent {
@@ -46,11 +50,15 @@ export abstract class DatavComponent {
     opacity: 1,
     filpV: false,
     filpH: false,
+    useTransform: false,
+    transformX: 0,
+    transformY: 0,
+    transformZ: 0,
   }
 
   projectId = 0
   parentId?: string
-  // children: DatavComponent[] | null = null
+  children: DatavComponent[] | null = null
 
   abstract config: Record<string, any>
 
@@ -96,7 +104,7 @@ export abstract class DatavChartSeries {
   id: string
   name: string
 
-  constructor (type: string, name: string) {
+  constructor(type: string, name: string) {
     this.type = type
     this.id = generateId(name)
     this.name = name
