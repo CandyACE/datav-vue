@@ -212,7 +212,7 @@ export default (adapter: MockAdapter) => {
           icon: 'v-icon-title',
           img: '//files.pengxiaotian.com/com-thum/main-title-370-208.png',
           config: {
-            title: '图新大屏',
+            title: '大屏',
             textStyle: {
               fontFamily: 'Microsoft Yahei',
               fontSize: 49,
@@ -266,7 +266,7 @@ export default (adapter: MockAdapter) => {
               pageFilters: [],
               config: {
                 useFilter: false,
-                data: '{\r\n  "title": "图新大屏",\r\n  "url": ""\r\n}',
+                data: '{\r\n  "title": "大屏",\r\n  "url": ""\r\n}',
               },
             },
           },
