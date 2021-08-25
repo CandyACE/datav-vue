@@ -252,6 +252,13 @@ export const button = {
       thum: `${import.meta.env.VITE_APP_CDN}/com-thum/full-screen-368-208.png`,
       used: true,
     },
+    {
+      name: 'VButton',
+      alias: '按钮',
+      img: `${import.meta.env.VITE_APP_CDN}/com/full-screen-332-144.png`,
+      thum: `${import.meta.env.VITE_APP_CDN}/com-thum/full-screen-368-208.png`,
+      used: true,
+    },
   ],
 }
 

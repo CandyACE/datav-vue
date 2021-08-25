@@ -47,6 +47,13 @@
         :step="0.05"
       />
     </g-field>
+    <g-field
+      :level="2"
+      label="鼠标穿透"
+      tooltip="鼠标穿透会在预览界面停止响应鼠标事件，为了防止出现点不到下面组件的问题"
+    >
+      <el-switch v-model="attr.mousePenetrate" :level="2" />
+    </g-field>
     <g-field :level="2" label="应用3D变换">
       <el-switch v-model="attr.useTransform" />
     </g-field>

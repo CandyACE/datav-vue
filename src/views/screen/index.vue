@@ -41,6 +41,7 @@
               }deg) rotateZ(${com.attr.transformZ || 0}deg)`
               : ''
           }`,
+          'pointer-events': com.attr.mousePenetrate ? 'none' : 'auto',
           filter: styleFilter,
         }"
         class="-datav-com absolute"

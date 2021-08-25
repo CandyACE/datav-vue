@@ -13,13 +13,14 @@ import { MainImg } from './media/main-img/src/main-img'
 
 import { BasicBar } from './bar/basic-bar/src/basic-bar'
 
+// button
 import { FullScreen } from './button/full-screen/src/full-screen'
+import { Button } from './button/button/src/button'
 
 import { WordCloud } from './chart/word-cloud/src/word-cloud'
 
 // map
 import { CesiumBox } from './map/cesium-box/src/cesium-box'
-// import { LsGlobeEarth } from './map/ls-globe-earth/src/ls-globe-earth'
 
 export function createComponent(name: string) {
   switch (name.substr(1)) {
@@ -51,8 +52,8 @@ export function createComponent(name: string) {
       return new WordCloud()
     case 'CesiumBox':
       return new CesiumBox()
-    // case 'LsGlobeEarth':
-    //   return new LsGlobeEarth()
+    case 'Button':
+      return new Button()
     default:
       throw Error(`Unknown component type: ${name}.`)
   }

@@ -14,13 +14,14 @@ import VMainImg from './media/main-img'
 
 import VBasicBar from './bar/basic-bar'
 
+// button
 import VFullScreen from './button/full-screen'
+import VButton from './button/button'
 
 import VWordCloud from './chart/word-cloud'
 
 // map
 import VCesium from './map/cesium-box'
-// import LsGlobeEarth from './map/ls-globe-earth'
 
 const components = [
   VMainTitle,
@@ -37,7 +38,7 @@ const components = [
   VMainImg,
   VWordCloud,
   VCesium,
-  // LsGlobeEarth
+  VButton,
 ]
 
 const install = (app: App): void => {

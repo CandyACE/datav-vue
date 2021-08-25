@@ -57,37 +57,64 @@
           <div class="scale-value-item" @click="submitScale(-1)">自适应</div>
         </div>
         <template #reference>
-          <i class="v-icon-arrow-down open-icon" @click.stop="showScaleList"></i>
+          <i
+            class="v-icon-arrow-down open-icon"
+            @click.stop="showScaleList"
+          ></i>
         </template>
       </el-popover>
     </div>
     <div class="scale-slider-wp">
+      <i class="togger-icon" @click="onSizeMinusClick">
+        <Minus />
+      </i>
       <el-slider
         v-model="scale"
+        class="scale-control-wp"
         :min="10"
         :max="200"
         :step="5"
         :show-tooltip="false"
-        @change="submitScale"
+        @input="onScaleSliderInput"
       />
+      <i class="togger-icon" @click="onSizePlusClick">
+        <Plus />
+      </i>
     </div>
+    <Thumbnail :selected-com="selectedCom" />
   </el-footer>
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, watch, onMounted, onUnmounted } from 'vue'
+import {
+  defineComponent,
+  ref,
+  watch,
+  onMounted,
+  onUnmounted,
+  computed,
+} from 'vue'
 import { isMac } from '@/utils/util'
 import { PanelType, ToolbarModule } from '@/store/modules/toolbar'
 import { EditorModule } from '@/store/modules/editor'
+import { Minus, Plus } from '@element-plus/icons'
+import { throttle } from 'lodash'
+import Thumbnail from './footer-thumbnail.vue'
 
 export default defineComponent({
   name: 'FooterToolbar',
+  components: {
+    Minus,
+    Plus,
+    Thumbnail,
+  },
   setup() {
     const scaleList = ref([200, 150, 100, 50])
     const scale = ref(20)
     const inputScale = ref(20)
     const visibleScaleList = ref(false)
     const useSlider = ref(false)
+    const selectedCom = computed(() => EditorModule.selectedCom)
 
     const hideScaleList = () => {
       visibleScaleList.value = false
@@ -128,17 +155,26 @@ export default defineComponent({
 
     const addShortcuts = (ev: KeyboardEvent) => {
       const target = ev.target as HTMLElement
-      if (!['input','textarea'].includes(target.tagName.toLowerCase())) {
+      if (!['input', 'textarea'].includes(target.tagName.toLowerCase())) {
         const ismac = isMac()
         if ((!ismac && ev.ctrlKey) || (ismac && ev.metaKey)) {
           const key = ev.key.toLowerCase()
           const { setPanelState } = ToolbarModule
           if (key === 'arrowleft') {
-            setPanelState({ type: PanelType.layer, value: !ToolbarModule.layer.show })
+            setPanelState({
+              type: PanelType.layer,
+              value: !ToolbarModule.layer.show,
+            })
           } else if (key === 'arrowup') {
-            setPanelState({ type: PanelType.components, value: !ToolbarModule.components.show })
+            setPanelState({
+              type: PanelType.components,
+              value: !ToolbarModule.components.show,
+            })
           } else if (key === 'arrowright') {
-            setPanelState({ type: PanelType.config, value: !ToolbarModule.config.show })
+            setPanelState({
+              type: PanelType.config,
+              value: !ToolbarModule.config.show,
+            })
           } else if (key === 'a') {
             EditorModule.autoCanvasScale(getPanelOffset)
           }
@@ -156,6 +192,35 @@ export default defineComponent({
       document.removeEventListener('keydown', addShortcuts, false)
     })
 
+    const onSizeMinusClick = () => {
+      if (scale.value - 10 < 10) {
+        scale.value = 10
+        return
+      }
+      scale.value -= 10
+      submitScale(scale.value)
+    }
+
+    const onSizePlusClick = () => {
+      if (scale.value + 10 > 200) {
+        scale.value = 200
+        return
+      }
+      scale.value += 10
+      submitScale(scale.value)
+    }
+
+    // 使用节流的方式来进行滑块的缩放
+    const onScaleSliderInput = throttle(
+      () => {
+        submitScale(scale.value)
+      },
+      500,
+      {
+        leading: true,
+      },
+    )
+
     return {
       scaleList,
       scale,
@@ -164,13 +229,17 @@ export default defineComponent({
       showScaleList,
       useSlider,
       submitScale,
+      onScaleSliderInput,
+      onSizeMinusClick,
+      onSizePlusClick,
+      selectedCom,
     }
   },
 })
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/themes/var';
+@import "@/styles/themes/var";
 
 .bottom-sider {
   position: absolute;
@@ -239,6 +308,19 @@ export default defineComponent({
 
   .scale-slider-wp {
     width: 190px;
+    display: flex;
+    align-items: center;
+
+    > .scale-control-wp {
+      width: 129px;
+    }
+
+    > .togger-icon {
+      color: $font-color;
+      margin: 0 8px;
+      width: 14px;
+      cursor: pointer;
+    }
   }
 }
 

@@ -22,6 +22,7 @@ export interface ComponentAttr {
   transformX: number
   transformY: number
   transformZ: number
+  mousePenetrate: boolean
 }
 
 export abstract class DatavComponent {
@@ -54,6 +55,7 @@ export abstract class DatavComponent {
     transformX: 0,
     transformY: 0,
     transformZ: 0,
+    mousePenetrate: false,
   }
 
   projectId = 0
