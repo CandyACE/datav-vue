@@ -81,7 +81,7 @@
         <Plus />
       </i>
     </div>
-    <Thumbnail :selected-com="selectedCom" />
+    <Thumbnail />
   </el-footer>
 </template>
 
@@ -98,7 +98,6 @@ import { isMac } from '@/utils/util'
 import { PanelType, ToolbarModule } from '@/store/modules/toolbar'
 import { EditorModule } from '@/store/modules/editor'
 import { Minus, Plus } from '@element-plus/icons'
-import { throttle } from 'lodash'
 import Thumbnail from './footer-thumbnail.vue'
 
 export default defineComponent({
@@ -114,7 +113,6 @@ export default defineComponent({
     const inputScale = ref(20)
     const visibleScaleList = ref(false)
     const useSlider = ref(false)
-    const selectedCom = computed(() => EditorModule.selectedCom)
 
     const hideScaleList = () => {
       visibleScaleList.value = false
@@ -210,16 +208,9 @@ export default defineComponent({
       submitScale(scale.value)
     }
 
-    // 使用节流的方式来进行滑块的缩放
-    const onScaleSliderInput = throttle(
-      () => {
-        submitScale(scale.value)
-      },
-      500,
-      {
-        leading: true,
-      },
-    )
+    const onScaleSliderInput = () => {
+      submitScale(scale.value)
+    }
 
     return {
       scaleList,
@@ -232,7 +223,6 @@ export default defineComponent({
       onScaleSliderInput,
       onSizeMinusClick,
       onSizePlusClick,
-      selectedCom,
     }
   },
 })

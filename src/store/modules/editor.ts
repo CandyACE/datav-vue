@@ -1,7 +1,7 @@
 import {
   VuexModule, Module, Mutation, Action, getModule, config,
 } from 'vuex-module-decorators'
-import { cloneDeep, debounce  } from 'lodash-es'
+import { cloneDeep, debounce } from 'lodash-es'
 import store from '@/store'
 import { Project } from '@/domains/project'
 import { PageConfig, PageVariable } from '@/domains/editor'
@@ -56,6 +56,10 @@ export interface IEditorState {
   }
   variables: PageVariable
   isNormalResizeMode: boolean
+  scroll: {
+    x: number
+    y: number
+  }
 }
 
 /* endregion */
@@ -158,6 +162,11 @@ class Editor extends VuexModule implements IEditorState {
   }
 
   isNormalResizeMode = true
+
+  scroll = {
+    x: 0,
+    y: 0,
+  }
 
   public get selectedCom() {
     return this.coms.find(m => m.selected)
@@ -376,6 +385,16 @@ class Editor extends VuexModule implements IEditorState {
     if (payload.guideLine) {
       this.guideLine = { ...payload.guideLine }
     }
+  }
+
+  @Mutation
+  public SET_SCROLL(data: { x: number; y: number; }) {
+    this.scroll = { ...data }
+  }
+
+  @Action
+  public async setScroll(data: { x: number; y: number; }) {
+    this.SET_SCROLL(data)
   }
 
   @Action

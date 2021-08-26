@@ -12,17 +12,14 @@ import {
   toRef,
   onMounted,
   watch,
+  onUnmounted,
 } from 'vue'
 import { useDataCenter, getFieldMap } from '@/mixins/data-center'
 import { ApiModule } from '@/store/modules/api'
 import { CesiumBox } from './cesium-box'
 import { generateId } from '@/utils/util'
 import { createTDTImagery } from '@/utils/cesium-utils'
-import {
-  Color,
-  ImageryLayer,
-  Viewer,
-} from 'cesium'
+import { Color, ImageryLayer, Viewer } from 'cesium'
 
 export default defineComponent({
   name: 'VCesiumBox',
@@ -102,6 +99,10 @@ export default defineComponent({
         viewer.scene.skyBox.show = false
         viewer.scene.backgroundColor = new Color(0, 0, 0, 0)
       }
+    })
+
+    onUnmounted(() => {
+      viewer.destroy()
     })
 
     watch(

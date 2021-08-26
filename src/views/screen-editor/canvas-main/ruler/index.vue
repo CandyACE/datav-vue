@@ -11,7 +11,10 @@
       :style="`transform: rotate(90deg) translateX(-${vScroll}px);`"
     ></div>
     <div title="切换参考线" class="ruler-corner" @click="toggleGuides">
-      <i :class="`v-icon-line-${visible ? 'show' : 'hide'}`" style="z-index: 10;"></i>
+      <i
+        :class="`v-icon-line-${visible ? 'show' : 'hide'}`"
+        style="z-index: 10"
+      ></i>
     </div>
   </div>
 </template>
@@ -96,6 +99,7 @@ export default defineComponent({
       const dom = ev.target as HTMLElement
       hScroll.value = dom.scrollLeft
       vScroll.value = dom.scrollTop
+      EditorModule.setScroll({ x: dom.scrollLeft, y: dom.scrollTop })
     }
 
     onMounted(() => {
@@ -121,7 +125,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/styles/themes/var';
+@import "@/styles/themes/var";
 
 .canvas-ruler-wp {
   position: fixed;

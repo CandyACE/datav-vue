@@ -23,22 +23,11 @@
           style="width: 190px; height: 110px"
         ></canvas>
         <span
-          v-if="selectedCom"
-          class="highlight"
-          :style="{
-            transform: `translate(${
-              selectedCom?.attr.x * proportion + offset
-            }px,${selectedCom?.attr.y * proportion + offset}px)`,
-            width: `${selectedCom?.attr.w * proportion}px`,
-            height: `${selectedCom?.attr.h * proportion}px`,
-          }"
-        ></span>
-        <span
           class="select-span"
           :style="{
-            transform: `translate(${selectSpanConfig.x}px,${selectSpanConfig.y}px)`,
-            width: `${selectSpanConfig.width}px`,
-            height: `${selectSpanConfig.height}px`,
+            transform: `translate(${editorScroll.x}px,${editorScroll.y}px)`,
+            width: `${editorScroll.width}px`,
+            height: `${editorScroll.height}px`,
           }"
         ></span>
       </div>
@@ -47,60 +36,88 @@
 </template>
 
 <script lang="ts">
-import { ComponentAttr, DatavComponent } from '@/components/datav-component'
 import { EditorModule } from '@/store/modules/editor'
 import {
   computed,
   defineComponent,
   onMounted,
-  PropType,
+  onUnmounted,
   reactive,
   ref,
   watch,
+  watchEffect,
 } from 'vue'
+import { on, off } from '@/utils/dom'
 
 export default defineComponent({
   name: 'FooterThumbnail',
-  props: {
-    selectedCom: {
-      required: true,
-    },
-    // coms: {
-    //   type: Array as PropType<DatavComponent[]>,
-    //   required: true,
-    //   default: () => [],
-    // },
-  },
-  setup(props) {
+  setup() {
     const pageConfig = computed(() => EditorModule.pageConfig)
     const coms = computed(() => EditorModule.coms)
+    const editorCanvas = computed(() => EditorModule.canvas)
+    const editorScroll = computed(() => {
+      const data = {
+        x:
+          (EditorModule.scroll.x * proportion.value) / editorCanvas.value.scale,
+        y:
+          (EditorModule.scroll.y * proportion.value) / editorCanvas.value.scale,
+        width:
+          (defaultScreenShot.width / editorCanvas.value.scale) *
+          proportion.value,
+        height:
+          (defaultScreenShot.height / editorCanvas.value.scale) *
+          proportion.value,
+      }
+      return data
+    })
+    let offset = ref(5)
+    let proportion = ref(0)
+    let defaultScreenShot = { ...editorCanvas.value }
+    let isSelectMouseDown
 
-    watch(
-      () => props.selectedCom,
-      nv => {
-        if (!nv) drawCanvas()
-      },
-    )
+    const onSelectSpanMouseDown = () => {
+      isSelectMouseDown = true
+    }
+    const onSelectSpanMouseUp = () => {
+      isSelectMouseDown = false
+      console.log('up')
+    }
 
-    watch(
-      () => pageConfig.value.width,
-      config => {
+    const onSelectSpanMouseMove = (data: MouseEvent) => {
+      console.log(isSelectMouseDown)
+      if (!isSelectMouseDown) return
+      const x = data.movementX / proportion.value
+      const y = data.movementY / proportion.value
+      const canvasWp = document.getElementById('canvas-wp')
+      canvasWp.scrollTop += y
+      canvasWp.scrollLeft += x
+    }
+
+    onMounted(() => {
+      drawCanvas()
+      on(document, 'mouseup', drawCanvas)
+
+      watchEffect(() => {
         drawCanvas()
-      },
-    )
+      })
 
-    watch(
-      () => pageConfig.value.height,
-      config => {
-        drawCanvas()
-      },
-    )
+      const selectSpanEl = document.getElementsByClassName(
+        'select-span',
+      )[0] as HTMLElement
+      on(selectSpanEl, 'mousedown', onSelectSpanMouseDown)
+      on(selectSpanEl, 'mousemove', onSelectSpanMouseMove)
+      on(selectSpanEl, 'mouseup', onSelectSpanMouseUp)
+    })
 
-    const selectSpanConfig = reactive({
-      x: 0,
-      y: 0,
-      width: 190,
-      height: 110,
+    onUnmounted(() => {
+      off(document, 'mouseup', drawCanvas)
+
+      const selectSpanEl = document.getElementsByClassName(
+        'select-span',
+      )[0] as HTMLElement
+      off(selectSpanEl, 'mousedown', onSelectSpanMouseDown)
+      off(selectSpanEl, 'mousemove', onSelectSpanMouseMove)
+      off(selectSpanEl, 'mouseup', onSelectSpanMouseUp)
     })
 
     // 默认canvas的属性
@@ -111,8 +128,6 @@ export default defineComponent({
 
     // 计算绘制的比例
     // 最长边距离边界的距离
-    let offset = ref(5)
-    let proportion = ref(0)
     const drawCanvas = () => {
       let canvas = document.getElementsByClassName(
         'canvas-thumbnail',
@@ -129,6 +144,7 @@ export default defineComponent({
         defaultCanvasParams.height,
       )
 
+      // 计算比例
       if (pageConfig.value.height >= pageConfig.value.width) {
         proportion.value =
           (defaultCanvasParams.height - 20) / pageConfig.value.height
@@ -137,62 +153,47 @@ export default defineComponent({
           (defaultCanvasParams.width - 20) / pageConfig.value.width
       }
 
-      // proportion = proportion * editorCanvas.value.scale;
-      // offset.value = 60 * proportion.value;
-
       // 绘制整个框架
       context.strokeStyle = '#20586c'
       context.lineWidth = 2
       context.strokeRect(
-        offset.value,
-        offset.value,
+        60 * proportion.value,
+        60 * proportion.value,
         pageConfig.value.width * proportion.value,
         pageConfig.value.height * proportion.value,
       )
 
       for (let i = 0; i < coms.value.length; i++) {
         const com = coms.value[i]
+
+        // 旋转
+        const translateParam = {
+          x:
+            com.attr.x * proportion.value +
+            offset.value +
+            (com.attr.w * proportion.value) / 2,
+          y:
+            com.attr.y * proportion.value +
+            offset.value +
+            (com.attr.h * proportion.value) / 2,
+        }
+        context.save()
+        context.translate(translateParam.x, translateParam.y)
+        context.rotate((com.attr.deg * Math.PI) / 180)
+        context.translate(-translateParam.x, -translateParam.y)
         context.fillStyle = 'rgba(255, 255, 255, 0.5)'
+        if (com.selected) {
+          context.fillStyle = 'rgba(0, 186, 255, 0.5)'
+        }
         context.fillRect(
           com.attr.x * proportion.value + offset.value,
           com.attr.y * proportion.value + offset.value,
           com.attr.w * proportion.value,
           com.attr.h * proportion.value,
         )
+        context.restore()
       }
     }
-
-    onMounted(() => {
-      drawCanvas()
-    })
-
-    const heightlightStyle = reactive({
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-      show: false,
-    })
-
-    // const resizeSelection = (com: DatavComponent) => {
-    //   if (!com) {
-    //     heightlightStyle.show = false;
-    //     drawCanvas();
-    //   } else {
-    //     heightlightStyle.show = true;
-    //     heightlightStyle.x = com.attr.x * proportion + offset;
-    //     heightlightStyle.y = com.attr.y * proportion + offset;
-    //     heightlightStyle.width = com.attr.w * proportion + offset;
-    //     heightlightStyle.height = com.attr.h * proportion + offset;
-    //   }
-    // };
-
-    // watch(
-    //   () => EditorModule.selectedCom,
-    //   (com) => {
-    //     resizeSelection(com);
-    //   }
-    // );
 
     const thumbnailVisible = ref(true)
     const setThumbnailVisible = () => {
@@ -200,13 +201,12 @@ export default defineComponent({
     }
 
     return {
-      selectSpanConfig,
       thumbnailVisible,
-      heightlightStyle,
       drawCanvas,
       setThumbnailVisible,
       offset,
       proportion,
+      editorScroll,
     }
   },
 })
@@ -245,6 +245,8 @@ export default defineComponent({
       top: 0;
       left: 0;
       cursor: move;
+      max-height: 110px;
+      max-width: 190px;
     }
 
     > .highlight {
@@ -252,6 +254,7 @@ export default defineComponent({
       background-color: rgba(0, 186, 255, 0.5);
       left: 0;
       z-index: 1;
+      display: none;
     }
   }
 
