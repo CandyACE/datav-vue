@@ -3,7 +3,7 @@
     <div class="setting-panel-content">
       <div class="scroll-container">
         <div class="setting-panel-gui">
-          <preview-prop :config="config" />
+          <preview-prop :config="config" :is-use-group="isUseGroup" />
         </div>
       </div>
     </div>
@@ -25,12 +25,17 @@ export default defineComponent({
       type: Array as PropType<PropDto[]>,
       required: true,
     },
+    isUseGroup: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
 })
 </script>
 
 <style lang="scss">
-@import '@/styles/themes/var';
+@import "@/styles/themes/var";
 
 .setting-panel {
   position: relative;

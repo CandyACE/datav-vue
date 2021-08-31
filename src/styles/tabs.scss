@@ -92,7 +92,7 @@
 }
 
 .el-tabs--card {
-  & > .el-tabs__header {
+  &>.el-tabs__header {
     border: 0;
     margin: 0;
 
@@ -123,5 +123,25 @@
 
   .el-tabs__content {
     background: $datav-tabs-nav-bgcolor-active;
+  }
+}
+
+
+.setting-panel-gui {
+  .el-tabs__header {
+    &.is-left {
+      width: 37px;
+    }
+
+    .el-tabs__item {
+      border: 0px;
+      height: auto;
+      padding: 9px !important;
+      text-align: center;
+      line-height: 14px;
+      word-wrap: break-word;
+      white-space: pre-line;
+      font-size: 13px;
+    }
   }
 }

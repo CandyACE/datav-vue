@@ -1,32 +1,21 @@
 <template>
   <div class="setting-panel-gui">
-    <g-field-collapse
-      label="三维球设置"
-    >
-      <g-field
-        :level="2"
-        label="背景透明"
-      >
-        <el-switch
-          v-model="config.viewerOptions.transparent"
-        />
-      </g-field>
-      <g-field
-        :level="2"
-        label="天地图Key"
-      >
-        <g-input
-          v-model="config.viewerOptions.tiandituKey"
-        />
-      </g-field>
-    </g-field-collapse>
+    <el-tabs tab-position="left">
+      <el-tab-pane label="三维球设置">
+        <g-field :level="2" label="背景透明">
+          <el-switch v-model="config.viewerOptions.transparent" />
+        </g-field>
+        <g-field :level="2" label="天地图Key">
+          <g-input v-model="config.viewerOptions.tiandituKey" />
+        </g-field>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent, PropType, toRef } from 'vue'
-import {
-} from '@/data/select-options'
+import {} from '@/data/select-options'
 import { CesiumBox } from './cesium-box'
 
 export default defineComponent({
@@ -42,7 +31,6 @@ export default defineComponent({
 
     return {
       config,
-
     }
   },
 })

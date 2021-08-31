@@ -5,16 +5,16 @@
   >
     <el-header class="pc-header">
       <el-row>
-        <el-col :span="24" style="text-align: center;">
+        <el-col :span="24" style="text-align: center">
           <el-input
             v-model.trim="classPath"
             size="large"
             placeholder="输入组件目录, 如: text/main-title"
-            style="width: 60%;"
+            style="width: 60%"
           >
             <template #prepend>src/components/</template>
             <template #append>
-              <el-select v-model="ext" style="width: 66px;">
+              <el-select v-model="ext" style="width: 66px">
                 <el-option value=".ts" />
                 <el-option value=".json" />
                 <el-option value=".ts&.json" />
@@ -24,7 +24,7 @@
           <el-button
             size="large"
             :disabled="!classPath"
-            style="margin-left: 12px;"
+            style="margin-left: 12px"
             @click="loadModule"
           >
             加载
@@ -44,6 +44,11 @@
               <div class="card-header__actions">
                 <span>属性配置</span>
                 <div>
+                  <el-checkbox
+                    v-model="isUseGroup"
+                    label="第一层转化成 Group"
+                    style="margin-right: 20px"
+                  />
                   <el-button @click="genConfig">生成配置代码</el-button>
                   <el-button @click="genTemplate">生成模板代码</el-button>
                 </div>
@@ -56,10 +61,10 @@
           <el-card>
             <el-tabs v-model="activeTab" type="card">
               <el-tab-pane label="配置预览" name="config">
-                <config-preview :config="list" />
+                <config-preview :config="list" :is-use-group="isUseGroup" />
               </el-tab-pane>
               <el-tab-pane label="配置代码（config.json）" name="code" lazy>
-                <div style="padding: 12px;">
+                <div style="padding: 12px">
                   <g-monaco-editor
                     language="json"
                     :code="configCode"
@@ -70,7 +75,7 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane label="模板代码（config.vue）" name="template" lazy>
-                <div style="padding: 12px;">
+                <div style="padding: 12px">
                   <g-monaco-editor
                     language="html"
                     :code="templateCode"
@@ -93,7 +98,13 @@ import { pascalCase } from '@/utils/util'
 import Handlebars from 'handlebars'
 import '@/pages/templates/register'
 import { DatavComponent } from '@/components/datav-component'
-import { PropDto, ComponentType, initPropData, mixinPropData, getUsedSelectOptions } from './config'
+import {
+  PropDto,
+  ComponentType,
+  initPropData,
+  mixinPropData,
+  getUsedSelectOptions,
+} from './config'
 import ConfigForm from '../components/config-form.vue'
 import ConfigPreview from '../components/config-preview.vue'
 import { plainText as configTpl } from '../templates/config-tpl.hbs'
@@ -114,6 +125,7 @@ export default defineComponent({
     const list = ref<PropDto[]>([])
     const configCode = ref('{}')
     const templateCode = ref('<template></template>')
+    const isUseGroup = ref(false)
 
     const getConfigByTS = async (comName: string) => {
       const path = `${classPath.value}/src/${comName}`
@@ -183,6 +195,7 @@ export default defineComponent({
         componentTypes: { ...ComponentType },
         configs: list.value,
         selectOpts: getUsedSelectOptions(list.value),
+        isUseGroup: isUseGroup.value,
       }
 
       try {
@@ -208,13 +221,14 @@ export default defineComponent({
       loadModule,
       genConfig,
       genTemplate,
+      isUseGroup,
     }
   },
 })
 </script>
 
 <style lang="scss">
-@import '@/styles/themes/var';
+@import "@/styles/themes/var";
 
 .pc-header {
   padding-top: 20px;

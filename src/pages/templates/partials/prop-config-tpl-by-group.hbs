@@ -1,0 +1,25 @@
+<el-tabs tab-position="left">
+{{#each configs as | item |}}
+{{#unless item.config.isHide}}
+{{#if ../isFlat}}
+{{> prop-component-tpl
+  componentTypes=../componentTypes
+  selectOpts=../selectOpts
+  judgeEnum=true
+}}
+{{else if item.children}}
+<el-tab-pane
+  label="{{item.config.alias}}"
+>
+  {{> prop-config-tpl
+    componentTypes=../componentTypes
+    selectOpts=../selectOpts
+    configs=item.children
+    toggleCol=item.config.toggleCol
+    level=2
+  }}
+</el-tab-pane>
+{{/if}}
+{{/unless}}
+{{/each}}
+</el-tabs>

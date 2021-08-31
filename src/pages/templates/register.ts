@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars'
 import { plainText as propConfigTpl } from './partials/prop-config-tpl.hbs'
 import { plainText as propComponentTpl } from './partials/prop-component-tpl.hbs'
+import { plainText as propConfigByGroupTpl } from './partials/prop-config-tpl-by-group.hbs'
 
 // ------Helpers------
 Handlebars.registerHelper('eq', (a, b) => a === b)
@@ -50,4 +51,5 @@ Handlebars.registerHelper('getInlineMode', val => {
 // ------Partials------
 Handlebars.registerPartial('prop-config-tpl', propConfigTpl)
 Handlebars.registerPartial('prop-component-tpl', propComponentTpl)
+Handlebars.registerPartial('prop-config-by-group-tpl', propConfigByGroupTpl)
 
